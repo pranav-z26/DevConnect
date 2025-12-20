@@ -1,5 +1,5 @@
 const isUserAuthenticated = (req, res, next) => {
-    const token = 'ss';
+    const token = 'xyz';
     if (token !== 'xyz') {
         res.send("You are not authorized")
     }
