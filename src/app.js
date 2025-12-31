@@ -64,7 +64,7 @@ app.post("/login", async (req, res) => {
     if (isUserAuthenticated) {
       //generate a jwt token and send it to user
 
-      const token = await jwt.sign({ _id: user._id }, "Devconnect@Pranav$26");
+      const token = await jwt.sign({ _id: user._id }, "Devconnect@Pranav$26", {expiresIn: "1h"});
 
       res.cookie("token", token);
       res.json({
@@ -91,60 +91,9 @@ app.get("/profile", userAuth, async (req, res) => {
   }
 });
 
-app.get("/feed", async (req, res) => {
-  //get all users available in database
-
-  try {
-    const users = await User.find({});
-    if (users.length === 0) {
-      return res.status(404).send("No users found");
-    } else {
-      res.send(users);
-    }
-  } catch (err) {
-    res.status(500).send("Error fetching users");
-  }
-});
-
-app.delete("/user", async (req, res) => {
-  try {
-    const deletedUser = await User.findOneAndDelete({
-      emailId: req.body.emailId,
-    });
-    res.status(200).send(`User ${deletedUser.firstName} deleted successfully`);
-  } catch (err) {
-    res.status(500).send("Error deleting user");
-  }
-});
-
-app.patch("/user/:userId", async (req, res) => {
-  const ALLOWED_UPDATES = ["photoUrl", "about", "age", "gender", "skills"];
-
-  const isUpdateAllowed = Object.keys(req.body).every((k) =>
-    ALLOWED_UPDATES.includes(k)
-  );
-
-  try {
-    if (!isUpdateAllowed) {
-      throw new Error("Req data not allowed to update");
-    }
-
-    if (req.body.skills && !Array.isArray(req.body.skills)) {
-      throw new Error("Skills must be an array of strings");
-    }
-    if (req.body.skills.length > 10) {
-      throw new Error("Skills cannot be more than 10");
-    }
-
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: req.params.userId },
-      req.body,
-      { runValidators: true }
-    );
-    res.send(`User ${updatedUser.firstName} updated successfully`);
-  } catch (err) {
-    res.status(400).send("Update Failed : " + err.message);
-  }
+app.post("/sendConnectionRequest", userAuth, async (req, res) => {
+    //Sending connection request
+    res.send("Connection Req Sent");
 });
 
 connectDb()
