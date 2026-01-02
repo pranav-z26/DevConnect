@@ -4,10 +4,12 @@ const connectionRequestSchema = new mongoose.Schema(
   {
     fromUserId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     toUserId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     status: {
@@ -33,4 +35,7 @@ connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
 //     next();
 // });
 
-module.exports = mongoose.model("ConnectionRequestModel", connectionRequestSchema);
+module.exports = mongoose.model(
+  "ConnectionRequestModel",
+  connectionRequestSchema
+);
